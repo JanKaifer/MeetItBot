@@ -1,17 +1,9 @@
 import threading
 import requests
 import json
+from time import time
 
 URL="http://192.168.1.41:2000/api"
-
-class DoTick(threading.Thread):
-    def __init__(self, fnc):
-        super(DoTick, self).__init__()
-        self.fnc=fnc
-
-    def run (self):
-        self.fnc()
-
 
 class Session:
     def __init__(self, login, password, handler_function):
@@ -35,7 +27,7 @@ class Session:
             #self.getProjectiles(game)
             self.getMyStats(game)
             self.getPlatforms(game)
-
+            
             self.handler_function(
                 data = self.gameData[game],
                 move = lambda *args: self.move(game, *args),
@@ -46,7 +38,8 @@ class Session:
             )
         threads = []
         for game in self.games:
-            threads.append(DoTick(lambda: tickGame(game)))
+            threads.append(threading.Thread(target = lambda: tickGame(game)))
+
 
         for t in threads: t.start()
         for t in threads: t.join()
