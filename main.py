@@ -35,7 +35,10 @@ def main(data, move, jump, stop, rocket, blackhole):
 
     if force_jump or my_platform['Radius']/.5 < 2*EXPECTED_LATENCY:
         jump()
-        rocket(0, -1, 0, 0.001)
+        rocket(0, -1, 0, 0.01)
+
+    if data['myStats']['VY'] < 0:
+        blackhole(0, 1, 0, 0)
 
 
 s = Session(LOGIN, PASSWORD, main)
