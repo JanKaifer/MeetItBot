@@ -48,7 +48,7 @@ while True:
     last_time = time()
     s.tick()
     took = time() - last_time
-    print("Tick took %fs" % took, end=" "*100 + "\r")
+    print(" Tick took %fs with %d games." % (took, len(s.games)), end=" "*10 + "\r")
     latencies.append(took)
     latencies = latencies[-10:]
     if took < TICK_LEN: sleep(TICK_LEN - took)
