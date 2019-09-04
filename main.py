@@ -30,7 +30,7 @@ def main(data, move, jump, stop, rocket, blackhole):
     if distance/5 < EXPECTED_LATENCY/2: move(distance_x, distance_z)
     else:
         stop()
-        if abs(my_platform['Radius']-distance)/.5 < EXPECTED_LATENCY:
+        if abs(my_platform['Radius']-distance)/.5 < 2*EXPECTED_LATENCY:
             force_jump = True
 
     if force_jump or my_platform['Radius']/.5 < 2*EXPECTED_LATENCY:
@@ -42,10 +42,14 @@ s = Session(LOGIN, PASSWORD, main)
 
 TPS = 60
 TICK_LEN = 1/TPS
+latencies = [0.3]*10
 while True:
+    EXPECTED_LATENCY = sum(latencies)/10
     last_time = time()
     s.tick()
     took = time() - last_time
-    print("Tick took %fs" % took, end="\r")
+    print("Tick took %fs" % took, end=" "*100 + "\r")
+    latencies.append(took)
+    latencies = latencies[-10:]
     if took < TICK_LEN: sleep(TICK_LEN - took)
     
